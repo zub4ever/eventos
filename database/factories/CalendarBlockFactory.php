@@ -2,10 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\CalendarBlock;
-use App\Models\Tenant;
-use App\Models\User;
 use App\Enums\UserRole;
+use App\Models\CalendarBlock;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -23,13 +22,9 @@ class CalendarBlockFactory extends Factory
     public function definition(): array
     {
         return [
-            'tenant_id' => Tenant::factory(),
             'blocked_date' => fake()->dateTimeBetween('now', '+6 months')->format('Y-m-d'),
             'reason' => fake()->optional()->sentence(),
-            'created_by' => fn (array $attributes) => User::factory()->create([
-                'tenant_id' => $attributes['tenant_id'],
-                'role' => UserRole::ADMIN,
-            ])->id,
+            'created_by' => User::factory()->admin(),
         ];
     }
 }

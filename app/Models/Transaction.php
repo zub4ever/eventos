@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\TransactionPaymentMethod;
 use App\Enums\TransactionStatus;
+use App\Modules\Tenancy\Concerns\BelongsToTenant;
 use Database\Factories\TransactionFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,14 +14,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Transaction extends Model
 {
     /** @use HasFactory<TransactionFactory> */
-    use HasFactory, HasUuids;
+    use BelongsToTenant, HasFactory, HasUuids;
 
     public $incrementing = false;
 
     protected $keyType = 'string';
 
     protected $fillable = [
-        'tenant_id',
         'booking_id',
         'gateway_name',
         'gateway_transaction_id',
@@ -46,12 +46,6 @@ class Transaction extends Model
             'gateway_payload' => 'array',
         ];
     }
-
-    public function tenant(): BelongsTo
-    {
-        return $this->belongsTo(Tenant::class);
-    }
-
     public function booking(): BelongsTo
     {
         return $this->belongsTo(Booking::class);

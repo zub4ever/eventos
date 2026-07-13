@@ -5,7 +5,6 @@ namespace Database\Factories;
 use App\Enums\TransactionPaymentMethod;
 use App\Enums\TransactionStatus;
 use App\Models\Booking;
-use App\Models\Tenant;
 use App\Models\Transaction;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -24,10 +23,7 @@ class TransactionFactory extends Factory
     public function definition(): array
     {
         return [
-            'tenant_id' => Tenant::factory(),
-            'booking_id' => fn (array $attributes) => Booking::factory()->create([
-                'tenant_id' => $attributes['tenant_id'],
-            ])->id,
+            'booking_id' => Booking::factory(),
             'gateway_name' => 'abacatepay',
             'gateway_transaction_id' => fake()->optional()->uuid(),
             'payment_method' => fake()->randomElement(TransactionPaymentMethod::cases()),

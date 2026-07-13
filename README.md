@@ -30,6 +30,10 @@ Etapa 1 concluida:
 - Estrutura inicial de monolito modular criada
 - Rotas iniciais de teste criadas (`/` e `/health`)
 
+## Contexto compartilhado
+
+Para continuidade do projeto em outro ambiente ou outra maquina, consulte [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md).
+
 ## Estrutura modular
 
 ```text

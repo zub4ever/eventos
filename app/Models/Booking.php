@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\BookingPeriodType;
 use App\Enums\BookingStatus;
+use App\Modules\Tenancy\Concerns\BelongsToTenant;
 use Database\Factories\BookingFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,14 +15,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Booking extends Model
 {
     /** @use HasFactory<BookingFactory> */
-    use HasFactory, HasUuids;
+    use BelongsToTenant, HasFactory, HasUuids;
 
     public $incrementing = false;
 
     protected $keyType = 'string';
 
     protected $fillable = [
-        'tenant_id',
         'user_id',
         'event_date',
         'period_type',
@@ -40,12 +40,6 @@ class Booking extends Model
             'payment_expires_at' => 'datetime',
         ];
     }
-
-    public function tenant(): BelongsTo
-    {
-        return $this->belongsTo(Tenant::class);
-    }
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

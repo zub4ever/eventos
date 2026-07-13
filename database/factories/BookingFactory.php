@@ -5,7 +5,6 @@ namespace Database\Factories;
 use App\Enums\BookingPeriodType;
 use App\Enums\BookingStatus;
 use App\Models\Booking;
-use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -24,10 +23,7 @@ class BookingFactory extends Factory
     public function definition(): array
     {
         return [
-            'tenant_id' => Tenant::factory(),
-            'user_id' => fn (array $attributes) => User::factory()->create([
-                'tenant_id' => $attributes['tenant_id'],
-            ])->id,
+            'user_id' => User::factory(),
             'event_date' => fake()->dateTimeBetween('now', '+3 months')->format('Y-m-d'),
             'period_type' => fake()->randomElement(BookingPeriodType::cases()),
             'total_price' => fake()->randomElement([300.00, 500.00]),

@@ -7,6 +7,7 @@ use App\Enums\UserRole;
 use App\Models\Tenant;
 use App\Models\TenantConfig;
 use App\Models\User;
+use App\Modules\Tenancy\Support\TenantContext;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -25,27 +26,28 @@ class TenantAdminSeeder extends Seeder
             ]
         );
 
-        TenantConfig::query()->updateOrCreate(
-            ['tenant_id' => $tenant->id],
-            [
-                'regular_price' => 300.00,
-                'extended_price' => 500.00,
-                'theme_color_hex' => '#0f172a',
-                'logo_url' => null,
-            ]
-        );
+        app(TenantContext::class)->run($tenant, function (): void {
+            TenantConfig::query()->updateOrCreate(
+                [],
+                [
+                    'regular_price' => 300.00,
+                    'extended_price' => 500.00,
+                    'theme_color_hex' => '#0f172a',
+                    'logo_url' => null,
+                ]
+            );
 
-        User::query()->updateOrCreate(
-            [
-                'tenant_id' => $tenant->id,
-                'email' => 'admin@cliente1.saas.com.br',
-            ],
-            [
-                'name' => 'Admin Cliente 1',
-                'password' => Hash::make('password'),
-                'role' => UserRole::ADMIN,
-                'phone' => null,
-            ]
-        );
+            User::query()->updateOrCreate(
+                [
+                    'email' => 'admin@cliente1.saas.com.br',
+                ],
+                [
+                    'name' => 'Admin Cliente 1',
+                    'password' => Hash::make('password'),
+                    'role' => UserRole::ADMIN,
+                    'phone' => null,
+                ]
+            );
+        });
     }
 }

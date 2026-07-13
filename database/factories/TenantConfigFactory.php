@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Tenant;
 use App\Models\TenantConfig;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,7 +20,6 @@ class TenantConfigFactory extends Factory
     public function definition(): array
     {
         return [
-            'tenant_id' => Tenant::factory(),
             'regular_price' => 300.00,
             'extended_price' => 500.00,
             'theme_color_hex' => fake()->optional()->hexColor(),
