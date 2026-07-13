@@ -17,7 +17,7 @@ defineProps({
             <p class="text-sm uppercase tracking-widest text-cyan-300">MVP Etapa 1</p>
             <h1 class="mt-4 text-4xl font-semibold">{{ appName }} integrado com Inertia + Vue 3</h1>
             <p class="mt-6 text-slate-300">
-                Ambiente base pronto para o SaaS multi-tenant com domínio principal
+                Ambiente base pronto para o SaaS multi-tenant com domínio principalllll
                 <strong>{{ appDomain }}</strong>.
             </p>
 
