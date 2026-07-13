@@ -116,6 +116,21 @@ ASAAS_WEBHOOK_TOKEN=
 
 ## Executando em desenvolvimento
 
+Com Docker Compose:
+
+```bash
+docker compose up -d
+```
+
+Isso sobe:
+
+- Laravel/Apache em `http://localhost:8080`
+- Vite HMR em `http://localhost:5173`
+
+As alteracoes em arquivos Vue, JS e CSS passam a refletir automaticamente no navegador via hot reload.
+
+Sem Docker:
+
 Terminal 1:
 
 ```bash
