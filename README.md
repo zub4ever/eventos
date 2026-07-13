@@ -1,59 +1,147 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# MFeventos SaaS
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+MVP de um SaaS para agendamento de eventos e piscinas, com arquitetura de monolito modular e base multi-tenant por isolamento logico (`tenant_id`) em banco compartilhado.
 
-## About Laravel
+## Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.3+
+- Laravel 12
+- Vue.js 3 (Composition API)
+- Inertia.js
+- PostgreSQL
+- Redis
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Dominio
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Dominio principal: `saas.com.br`
+- Exemplo de tenants por subdominio:
+	- `cliente1.saas.com.br`
+	- `cliente2.saas.com.br`
 
-## Learning Laravel
+## Status atual
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Etapa 1 concluida:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Projeto Laravel inicializado
+- Inertia + Vue 3 configurados
+- Dependencias de auth (Breeze) adicionadas
+- PostgreSQL configurado como banco padrao no `.env.example`
+- Redis configurado para cache, filas e sessao no `.env.example`
+- Estrutura inicial de monolito modular criada
+- Rotas iniciais de teste criadas (`/` e `/health`)
 
-## Laravel Sponsors
+## Estrutura modular
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```text
+app/
+├── Modules/
+│   ├── Tenancy/
+│   │   ├── Actions/
+│   │   ├── Contracts/
+│   │   ├── DTOs/
+│   │   ├── Events/
+│   │   ├── Exceptions/
+│   │   ├── Http/
+│   │   ├── Models/
+│   │   └── Services/
+│   ├── Booking/
+│   ├── Payment/
+│   ├── Administration/
+│   └── Shared/
+├── Http/
+├── Models/
+├── Providers/
+└── Console/
+```
 
-### Premium Partners
+## Requisitos locais
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- PHP 8.3+
+- Composer
+- Node.js 20+
+- PostgreSQL 15+
+- Redis 7+
 
-## Contributing
+### Extensoes PHP recomendadas
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+No Linux/Ubuntu:
 
-## Code of Conduct
+```bash
+sudo apt update
+sudo apt install -y php8.3-xml php8.3-pgsql php8.3-redis
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+> Observacao: sem `php8.3-xml` (DOM/XML), alguns comandos do Composer/Artisan podem falhar durante scripts de pos-instalacao.
 
-## Security Vulnerabilities
+## Instalacao
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+```
 
-## License
+## Configuracao de ambiente
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+O arquivo `.env.example` ja contem os parametros iniciais para:
+
+- URL/base de dominio (`APP_URL`, `APP_DOMAIN`)
+- PostgreSQL (`DB_CONNECTION=pgsql`)
+- Redis (`CACHE_STORE=redis`, `QUEUE_CONNECTION=redis`, `SESSION_DRIVER=redis`)
+- Provedores de pagamento (AbacatePay e Asaas)
+
+Valores principais esperados:
+
+```env
+APP_URL=http://saas.local
+APP_DOMAIN=saas.local
+
+DB_CONNECTION=pgsql
+
+CACHE_STORE=redis
+QUEUE_CONNECTION=redis
+SESSION_DRIVER=redis
+
+PAYMENT_PROVIDER=abacatepay
+
+ABACATEPAY_API_URL=
+ABACATEPAY_API_KEY=
+ABACATEPAY_WEBHOOK_SECRET=
+
+ASAAS_API_URL=
+ASAAS_API_KEY=
+ASAAS_WEBHOOK_TOKEN=
+```
+
+## Executando em desenvolvimento
+
+Terminal 1:
+
+```bash
+php artisan serve
+```
+
+Terminal 2:
+
+```bash
+npm run dev
+```
+
+Opcional (build de producao):
+
+```bash
+npm run build
+```
+
+## Rotas iniciais
+
+- `/`: pagina Vue renderizada via Inertia para validar integracao Laravel + Inertia + Vue
+- `/health`: endpoint JSON simples de healthcheck
+
+## Proximas etapas
+
+- Implementar multi-tenancy por subdominio e `tenant_id`
+- Implementar dominio de reservas/agendamentos
+- Implementar fluxo de pagamentos
+- Expandir autenticacao e autorizacao por perfil
